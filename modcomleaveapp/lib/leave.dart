@@ -6,15 +6,15 @@ class Leaves extends StatelessWidget {
 
   String time(){
     if(DateTime.now().hour >= 6 && DateTime.now().hour < 12){
-      return 'Good Morning ${results['First Name']}';
+      return 'Good Morning ${results['FirstName']}';
 
     }
     else if(DateTime.now().hour >= 12 && DateTime.now().hour <= 16){
-      return 'Good Afternoon ${results['First Name']}';
+      return 'Good Afternoon ${results['FirstName']}';
     }
 
     else{
-      return 'Good Night ${results['First Name']}';
+      return 'Good Night ${results['FirstName']}';
     }
   }
 
