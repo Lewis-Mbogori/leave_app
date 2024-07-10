@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Leaves extends StatelessWidget {
-  const Leaves({super.key, required this.results});
+Leaves({super.key, required this.results});
   final Map results;
 
   String time(){
@@ -17,6 +17,8 @@ class Leaves extends StatelessWidget {
       return 'Good Night ${results['FirstName']}';
     }
   }
+  final _serial = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +34,34 @@ class Leaves extends StatelessWidget {
             ],
           ),
         )
-      ),);
+      ),
+
+      body: Column(
+        children: [
+          Form(
+            key: _formKey,
+            child: TextFormField(
+                controller: _serial,
+                decoration: const InputDecoration(
+                  labelText: "Serial/Reference Number "
+                ),
+                // validation
+                validator: (value) {
+                  if(value!.isEmpty){
+                    return'Value is not valid';
+                  }
+                  else if( int.tryParse (value)  == null){
+                    return null;
+                  }
+                  else{
+                    return null;
+                  }
+                },
+                ),
+          ),
+
+        ],
+      ),
+      );
   }
 }

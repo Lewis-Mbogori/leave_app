@@ -1,5 +1,6 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:modcomleaveapp/leave.dart';
 
 class Login extends StatefulWidget {
@@ -14,7 +15,37 @@ class _InputState extends State<Login> {
   final _lname = TextEditingController();
   final _email = TextEditingController();
   final _password = TextEditingController();
+  final _serial = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
+  Future<bool> postUsertoDB() async{
+
+    final url = Uri.parse("http://127.0.0.1:5000/register");
+
+    var headers = {'Content-Type': 'application/json'};
+
+    var body = {
+      'First Name': _fname.text,
+      'Last Name': _lname.text,
+      'Email': _email.text,
+      'Password': _password.text
+
+    };
+
+    http.Response res = await http.post(url, headers: headers, body: body);
+
+    if (res.statusCode == 200){
+      // we know the op was succesful
+      return true;
+    }
+    else{
+      // we know the op was not succesful
+      return false;
+    }
+    
+
+    
+    }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,6 +75,7 @@ class _InputState extends State<Login> {
                 }
               },
               ),
+              
               TextFormField(
               controller: _lname,
               decoration: const InputDecoration(
@@ -70,7 +102,7 @@ class _InputState extends State<Login> {
               // validation
               validator: (value) {
                 var validator = EmailValidator.validate('$value');
-                if(!validator){
+                if(validator){
                   return null;
                 }
                 else{
@@ -108,6 +140,13 @@ class _InputState extends State<Login> {
                 'Email': _email.text,
                 'Password': _password.text
               };
+              postUsertoDB().then((v) {
+                if (v == true){
+                  Navigator.push(context, MaterialPageRoute(builder: (_)=>  Leaves(results: results,)));
+
+                }
+                else{}
+              });
 
               Navigator.push(context, MaterialPageRoute(builder: (_)=>  Leaves(results: results,)));
               }
