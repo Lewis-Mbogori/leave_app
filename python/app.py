@@ -44,7 +44,8 @@ def post_user():
     lastname = data['lastname']
     email = data['email']
     password = data['password']
-    return jsonify(register_user(firstname = firstname,lastname=lastname,email=email,password=password)) 
+    return jsonify(register_user(firstname = firstname,lastname=lastname,email=email,password=password))
+ 
 @app.route('/users', methods=['GET'])
 def get_all_users_route():
     return get_all_users()
@@ -62,6 +63,14 @@ def update_user_route(user_id):
 def delete_user_route(user_id):
     return delete_user(user_id)
 
+@app.route('/apply', methods = ['POST'], )
+def post_leave():
+    data = request.get_json()
+    serial_number = data['serial_number']
+    leave_type = data['leave_type']
+    user_id = data['user_id']
+    
+    return jsonify(submit_leave_application(serial_number, leave_type, user_id)) 
 @app.route('/leave-apps', methods=['GET'])
 def get_all_leave_apps_route():
     return get_all_leave_apps()
