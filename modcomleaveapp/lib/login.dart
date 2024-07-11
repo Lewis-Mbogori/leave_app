@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:modcomleaveapp/leave.dart';
+
+import 'data/api.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -15,24 +19,24 @@ class _InputState extends State<Login> {
   final _lname = TextEditingController();
   final _email = TextEditingController();
   final _password = TextEditingController();
-  final _serial = TextEditingController();
+
   final _formKey = GlobalKey<FormState>();
 
   Future<bool> postUsertoDB() async{
 
-    final url = Uri.parse("http://127.0.0.1:5000/register");
+    final url = Uri.parse("$baseurl/register");
 
     var headers = {'Content-Type': 'application/json'};
 
     var body = {
-      'First Name': _fname.text,
-      'Last Name': _lname.text,
-      'Email': _email.text,
-      'Password': _password.text
+      'firstname': _fname.text,
+      'lastname': _lname.text,
+      'email': _email.text,
+      'password': _password.text
 
     };
 
-    http.Response res = await http.post(url, headers: headers, body: body);
+    http.Response res = await http.post(url, headers:{'Content-Type': 'application/json'}, body: json.encode(body));
 
     if (res.statusCode == 200){
       // we know the op was succesful
@@ -134,21 +138,23 @@ class _InputState extends State<Login> {
             if(isValid){
               try{
 
-                Map<String, String> results = {
-                'First Name': _fname.text,
-                'Last Name': _lname.text,
-                'Email': _email.text,
-                'Password': _password.text
-              };
+              
               postUsertoDB().then((v) {
                 if (v == true){
-                  Navigator.push(context, MaterialPageRoute(builder: (_)=>  Leaves(results: results,)));
+                  Navigator.push(context, MaterialPageRoute(builder: (_)=>  Leaves(results: {
+      'firstname': _fname.text,
+      'lastname': _lname.text,
+      'email': _email.text,
+      'password': _password.text
+
+    },)));
 
                 }
-                else{}
+                else{
+                  return;
+                }
               });
 
-              Navigator.push(context, MaterialPageRoute(builder: (_)=>  Leaves(results: results,)));
               }
               catch(e){
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
